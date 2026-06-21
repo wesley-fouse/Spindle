@@ -16,19 +16,34 @@ export default function AlbumPage() {
   const [tracks, setTracks] = useState(null);
   const [wiki, setWiki] = useState(undefined);
   const [reviews, setReviews] = useState([]);
+  const [error, setError] = useState(false);
+  const [tries, setTries] = useState(0);
   const entry = entryFor(id);
   const [draft, setDraft] = useState({ rating: 0, note: "", listened_on: todayISO() });
 
   useEffect(() => {
     let dead = false;
-    setAlbum(null); setTracks(null); setWiki(undefined); setReviews([]);
-    getAlbum(id).then(({ album, tracks }) => { if (dead) return; setAlbum(album); setTracks(tracks); if (album) wikiAbout(album.title + " " + album.artist + " album").then(w => !dead && setWiki(w)); });
+    setAlbum(null); setTracks(null); setWiki(undefined); setReviews([]); setError(false);
+    getAlbum(id).then(({ album, tracks }) => {
+      if (dead) return;
+      if (!album) { setError(true); return; }
+      setAlbum(album); setTracks(tracks);
+      wikiAbout(album.title + " " + album.artist + " album").then(w => !dead && setWiki(w));
+    }).catch(() => { if (!dead) setError(true); });
     fetchAlbumReviews(id).then(r => !dead && setReviews(r)).catch(() => {});
     window.scrollTo(0, 0);
     return () => { dead = true; };
-  }, [id]);
+  }, [id, tries]);
   useEffect(() => { setDraft(entry ? { rating: entry.rating || 0, note: entry.note || "", listened_on: entry.listened_on || todayISO() } : { rating: 0, note: "", listened_on: todayISO() }); }, [entry?.album_id, id]);
 
+  if (error) return <section style={{ paddingTop: 28 }}>
+    <button onClick={() => nav(-1)} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "var(--accent)", fontSize: 14, padding: "0 0 16px" }}><Icon name="back" size={18} color="var(--accent)" /> Back</button>
+    <div style={{ textAlign: "center", padding: "40px 20px", color: "var(--muted)" }}>
+      <div className="display" style={{ fontSize: 19, fontWeight: 600, color: "var(--ink)" }}>Couldn't load this album</div>
+      <div style={{ fontSize: 14, margin: "8px auto 16px", maxWidth: 360, lineHeight: 1.5 }}>The music service may have briefly rate-limited the request. Give it a second and try again.</div>
+      <button className="btn-primary" onClick={() => setTries(t => t + 1)}>Try again</button>
+    </div>
+  </section>;
   if (!album) return <section style={{ paddingTop: 28 }} className="muted">Loading album…</section>;
 
   const liked = entry?.liked, want = entry?.want && !entry?.listened, listened = entry?.listened;

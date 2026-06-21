@@ -1,10 +1,29 @@
-// Album metadata from public catalogs (Apple/iTunes Search) + context from Wikipedia.
-// No keys required. Album art + collectionId are cached in localStorage.
+// Album metadata via our own /api proxy (which forwards to Apple/Wikipedia and
+// caches at the edge). Adds client-side throttling + retry so a burst of cover
+// lookups doesn't trip Apple's per-IP rate limit. Art/ids cached in localStorage.
 
 const ART = "spindle_art_v2";
 const cache = (() => { try { return JSON.parse(localStorage.getItem(ART) || "{}"); } catch { return {}; } })();
 const save = () => { try { localStorage.setItem(ART, JSON.stringify(cache)); } catch {} };
 const keyOf = (a) => (a.artist + "|" + a.title).toLowerCase();
+
+// ---- fetch with retry/backoff (handles transient 403/429/5xx throttling) ----
+async function fetchJSON(path, retries = 3) {
+  let err;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const r = await fetch(path);
+      if (r.status === 429 || r.status === 403 || r.status >= 500) throw new Error("HTTP " + r.status);
+      return await r.json();
+    } catch (e) { err = e; if (i < retries) await new Promise(s => setTimeout(s, 350 * (i + 1) * (i + 1))); }
+  }
+  throw err;
+}
+
+// ---- concurrency limiter for the bursty background cover resolution ----
+const MAXC = 3; let active = 0; const q = [];
+function drain() { while (active < MAXC && q.length) { active++; q.shift()().finally(() => { active--; drain(); }); } }
+function throttled(path) { return new Promise((res, rej) => { q.push(() => fetchJSON(path).then(res, rej)); drain(); }); }
 
 export function mapAlbum(x) {
   return {
@@ -19,13 +38,12 @@ export function mapAlbum(x) {
 }
 
 export async function searchAlbums(term) {
-  const r = await fetch(`/api/itunes/search?media=music&entity=album&limit=25&term=${encodeURIComponent(term)}`);
-  const d = await r.json();
+  const d = await fetchJSON(`/api/itunes/search?media=music&entity=album&limit=25&term=${encodeURIComponent(term)}`);
   const seen = new Set();
   return (d.results || []).filter(x => x.collectionName && !seen.has(x.collectionId) && seen.add(x.collectionId)).map(mapAlbum);
 }
 
-// Resolve a {title,artist} seed to a real catalog album (with album_id + art). Cached.
+// Resolve a {title,artist} seed to a real catalog album (with album_id + art). Cached + throttled.
 export async function resolveSeed(seed) {
   const k = keyOf(seed);
   if (cache[k]) return { ...seed, ...cache[k] };
@@ -33,8 +51,7 @@ export async function resolveSeed(seed) {
   const aLow = seed.artist.toLowerCase();
   for (const term of terms) {
     try {
-      const r = await fetch(`/api/itunes/search?media=music&entity=album&limit=8&term=${encodeURIComponent(term)}`);
-      const d = await r.json();
+      const d = await throttled(`/api/itunes/search?media=music&entity=album&limit=8&term=${encodeURIComponent(term)}`);
       const hit = (d.results || []).find(x => { const n = (x.artistName || "").toLowerCase(); return n.includes(aLow) || aLow.includes(n); }) || (term === seed.title ? null : (d.results || [])[0]);
       if (hit) { const m = mapAlbum(hit); cache[k] = { album_id: m.album_id, artist_id: m.artist_id, art: m.art, year: m.year, genre: m.genre }; save(); return { ...seed, ...cache[k] }; }
     } catch {}
@@ -43,8 +60,7 @@ export async function resolveSeed(seed) {
 }
 
 export async function getAlbum(albumId) {
-  const r = await fetch(`/api/itunes/lookup?id=${albumId}&entity=song&limit=300`);
-  const d = await r.json();
+  const d = await fetchJSON(`/api/itunes/lookup?id=${albumId}&entity=song&limit=300`);
   const col = (d.results || []).find(x => x.wrapperType === "collection");
   const tracks = (d.results || [])
     .filter(x => x.wrapperType === "track" || x.kind === "song")
@@ -55,13 +71,11 @@ export async function getAlbum(albumId) {
 export async function getArtistAlbums(name, artistId) {
   try {
     if (artistId) {
-      const r = await fetch(`/api/itunes/lookup?id=${artistId}&entity=album&limit=80`);
-      const d = await r.json();
+      const d = await fetchJSON(`/api/itunes/lookup?id=${artistId}&entity=album&limit=80`);
       const al = (d.results || []).filter(x => x.wrapperType === "collection");
       if (al.length) return dedupeSort(al.map(mapAlbum));
     }
-    const r2 = await fetch(`/api/itunes/search?term=${encodeURIComponent(name)}&media=music&entity=album&attribute=artistTerm&limit=80`);
-    const d2 = await r2.json();
+    const d2 = await fetchJSON(`/api/itunes/search?term=${encodeURIComponent(name)}&media=music&entity=album&attribute=artistTerm&limit=80`);
     const aLow = name.toLowerCase();
     return dedupeSort((d2.results || []).filter(x => (x.artistName || "").toLowerCase().includes(aLow)).map(mapAlbum));
   } catch { return []; }
@@ -70,13 +84,11 @@ function dedupeSort(list) { const s = new Set(); return list.filter(a => a.album
 
 export async function wikiAbout(query) {
   try {
-    const s = await fetch(`/api/wiki/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=1&format=json&origin=*`);
-    const sd = await s.json();
+    const sd = await fetchJSON(`/api/wiki/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=1&format=json`);
     const hit = sd.query && sd.query.search && sd.query.search[0];
     if (!hit) return null;
-    const sum = await fetch(`/api/wiki/api/rest_v1/page/summary/${encodeURIComponent(hit.title)}`);
-    const sm = await sum.json();
-    const url = (sm.content_urls && sm.content_urls.desktop && sm.content_urls.desktop.page) || `/api/wiki/wiki/${encodeURIComponent(hit.title)}`;
+    const sm = await fetchJSON(`/api/wiki/api/rest_v1/page/summary/${encodeURIComponent(hit.title)}`);
+    const url = (sm.content_urls && sm.content_urls.desktop && sm.content_urls.desktop.page) || `https://en.wikipedia.org/wiki/${encodeURIComponent(hit.title)}`;
     return { title: sm.title || hit.title, extract: sm.type === "disambiguation" ? null : (sm.extract || null), url };
   } catch { return null; }
 }
