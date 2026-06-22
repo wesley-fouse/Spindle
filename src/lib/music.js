@@ -93,9 +93,9 @@ export async function wikiAbout(query) {
   } catch { return null; }
 }
 
-// Fetch the Apple Music top-albums chart (no rate limits, full artwork + IDs).
-export async function fetchCharts(limit = 100) {
-  const d = await fetchJSON(`https://rss.applemarketingtools.com/api/v2/us/music/most-played/${limit}/albums.json`, 1);
+// Fetch the Apple Music top-albums chart via our proxy (RSS domain blocks CORS).
+export async function fetchCharts() {
+  const d = await fetchJSON(`/api/charts`, 1);
   return (d.feed?.results || []).map(r => ({
     album_id: r.id,
     artist_id: null,
