@@ -92,6 +92,12 @@ export default function Discover() {
           {!activeCat
             ? <div className="browse" style={{ marginTop: 14 }}>{CATEGORIES.filter(c => c.key !== "New Releases").map(c => <CatCard key={c.key} cat={c} onOpen={() => setActiveCat(c)} />)}</div>
             : <AlbumGrid albums={catSeeds(activeCat)} entryFor={entryFor} onQuickLog={onQuick} />}
+
+          {!activeCat && <>
+            <h2 className="h2 display" style={{ marginTop: 34 }}>Essential albums</h2>
+            <div className="muted" style={{ fontSize: 12.5 }}>A curated library of classics and must-hears</div>
+            <AlbumGrid albums={classics} entryFor={entryFor} onQuickLog={onQuick} />
+          </>}
         </>}
   </section>;
 }

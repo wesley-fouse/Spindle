@@ -58,6 +58,52 @@ const POOL_DATA = [
   ["Is This It","The Strokes","Indie & Alternative","601140186","560289","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/9c/ae/7a/9cae7a72-29ed-08aa-1b42-913776bbb6ec/886443855571.jpg/600x600bb.jpg","2013"],
   ["Sound of Silver","LCD Soundsystem","Indie & Alternative","742432549","29525428","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/fb/fe/a5/fbfea51a-0130-d557-c1f4-9e5e98b7bab8/094638511359.jpg/600x600bb.jpg","2007"],
   ["Punisher","Phoebe Bridgers","Indie & Alternative","1537676681","326516787","https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/5a/5d/1f/5a5d1fde-7f6f-9997-3bca-d75f1e799464/656605154565.jpg/600x600bb.jpg","2020"],
+  // Hip-Hop expanded
+  ["The College Dropout","Kanye West","Hip-Hop","1437467864","2715720","https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/15/05/09/15050911-a2f1-9ebc-0d16-6e8faad1cf80/00602567924326.rgb.jpg/600x600bb.jpg","2004"],
+  ["Late Registration","Kanye West","Hip-Hop","1440763821","2715720","https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/0e/90/3c/0e903c43-9d81-f91b-90f1-727a58f7fb2c/00602498824030.rgb.jpg/600x600bb.jpg","2005"],
+  ["808s and Heartbreak","Kanye West","Hip-Hop","1609149054","2715720","https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/f3/61/19/f36119b9-4d88-05eb-4306-2ae0e7decf88/08UMGIM26559.rgb.jpg/600x600bb.jpg","2008"],
+  ["Yeezus","Kanye West","Hip-Hop","1484936940","2715720","https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/21/fd/d3/21fdd3d4-0c00-53ef-3903-d0569c49a812/19UMGIM89397.rgb.jpg/600x600bb.jpg","2013"],
+  ["Take Care","Drake","Hip-Hop","1440745498","271256","https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d2/53/62/d2536245-b94c-b3fd-7168-9512f655f6d4/00602527899091.rgb.jpg/600x600bb.jpg","2011"],
+  ["Nothing Was the Same","Drake","Hip-Hop","1440819797","271256","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/60/e8/d1/60e8d144-2b8e-cbdc-9ff8-beaf9f4868b1/00602537542345.rgb.jpg/600x600bb.jpg","2013"],
+  ["Certified Lover Boy","Drake","Hip-Hop","1584449196","271256","https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/cb/6b/5f/cb6b5fc3-8d35-908a-18e6-6f8eda46ce11/21UM1IM07521.rgb.jpg/600x600bb.jpg","2021"],
+  ["All Eyez on Me","2Pac","Hip-Hop","1588492978","105998","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/55/e5/7c/55e57cf2-8325-a088-7d54-3aeedad1143f/21UM1IM16263.rgb.jpg/600x600bb.jpg","1996"],
+  ["Life After Death","The Notorious B.I.G.","Hip-Hop","906586710","5499810","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/d0/9d/c8/d09dc822-43c6-b392-7980-ab492aa9a257/dj.bywycbiu.jpg/600x600bb.jpg","1997"],
+  ["The Low End Theory","A Tribe Called Quest","Hip-Hop","1806751228","1587965","https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b6/05/21/b605217c-42ee-8c1e-238b-0fc18570b10d/196873025063.jpg/600x600bb.jpg","1991"],
+  // R&B & Pop expanded
+  ["After Hours","The Weeknd","R&B & Soul","1499385848","479756766","https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/2b/b9/fe/2bb9fef5-d7f3-8345-25a9-db0e79fde4e4/20UMGIM11048.rgb.jpg/600x600bb.jpg","2020"],
+  ["Starboy","The Weeknd","R&B & Soul","1440870373","479756766","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b5/92/bb/b592bb72-52e3-e756-9b26-9f56d08f47ab/16UMGIM67864.rgb.jpg/600x600bb.jpg","2016"],
+  ["Lemonade","Beyoncé","R&B & Soul","1460432013","1419227","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/d2/53/65/d2536587-c7f3-9153-4677-f5a2f3e9e5ad/886447691120.jpg/600x600bb.jpg","2016"],
+  ["Renaissance","Beyoncé","R&B & Soul","1636789969","1419227","https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/fe/ba/43/feba43be-99e8-ad8c-9fad-1bfdea7a4e98/196589344267.jpg/600x600bb.jpg","2022"],
+  ["Ctrl","SZA","R&B & Soul","1239977075","605800394","https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/a2/bc/ad/a2bcad46-b389-4be1-8bac-5a0959b0b8e4/886446548449.jpg/600x600bb.jpg","2017"],
+  ["21","Adele","Pop","1544491232","262836961","https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/eb/ca/25/ebca2596-cd1e-b295-91a3-771c868d0a79/191404113868.png/600x600bb.jpg","2011"],
+  ["25","Adele","Pop","1544494115","262836961","https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/08/8c/24/088c2405-2e33-801b-5c38-e967f2c01e69/191404113974.png/600x600bb.jpg","2015"],
+  ["Midnights","Taylor Swift","Pop","1689089710","159260351","https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/fb/b7/5d/fbb75d98-3b52-2fa5-ca82-658194f3c498/23UMGIM58157.rgb.jpg/600x600bb.jpg","2022"],
+  // Electronic expanded
+  ["Random Access Memories","Daft Punk","Electronic","617154241","5468295","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/600x600bb.jpg","2013"],
+  ["Discovery","Daft Punk","Electronic","697194953","5468295","https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/fd/4a/77/fd4a77db-0ebc-d043-41a2-f32fa1bb0fb4/dj.qrikkdwj.jpg/600x600bb.jpg","2001"],
+  // Rock expanded
+  ["AM","Arctic Monkeys","Rock","663097964","62820413","https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/69/9c/b5/699cb5d6-115c-ff73-9d26-e57ea4350d72/887828031795.png/600x600bb.jpg","2013"],
+  ["Kid A","Radiohead","Rock","1097862870","657515","https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/bd/8e/13/bd8e1358-b367-a689-cb84-cebd0b067dc4/634904078263.png/600x600bb.jpg","2000"],
+  ["In Utero","Nirvana","Rock","1440858699","112018","https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/e3/20/03/e32003a4-99bc-1c70-40ba-001882f35dba/00602537526840.rgb.jpg/600x600bb.jpg","1993"],
+  ["Superunknown","Soundgarden","Rock","1440811129","133036","https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ae/b6/d6/aeb6d672-2004-41eb-ccba-e2964643a2bc/06UMGIM18607.rgb.jpg/600x600bb.jpg","1994"],
+  ["Wish You Were Here","Pink Floyd","Rock","1065973975","487143","https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/aa/e0/ab/aae0ab6a-d906-a189-81bf-70b56aa43f7a/886445635843.jpg/600x600bb.jpg","1975"],
+  ["Led Zeppelin IV","Led Zeppelin","Rock","580708175","994656","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5c/15/9b/5c159b27-95ca-b9a7-84e3-28e795fffd39/dj.kvkrpptq.jpg/600x600bb.jpg","1971"],
+  ["Physical Graffiti","Led Zeppelin","Rock","580707980","994656","https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/82/6c/5d/826c5d66-67b7-62f2-4d78-dd3c7b415e08/dj.pifhrvpa.jpg/600x600bb.jpg","1975"],
+  ["Exile on Main St.","The Rolling Stones","Rock","1440812661","1249595","https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/7f/e0/b4/7fe0b4da-36cd-a1d0-0f19-ef3fec18e3cd/08UMGIM15742.rgb.jpg/600x600bb.jpg","1972"],
+  ["The Suburbs","Arcade Fire","Indie & Alternative","1252757950","23203991","https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/ea/9f/1a/ea9f1ab0-4cac-c925-590d-14461f676912/886446576510.jpg/600x600bb.jpg","2010"],
+  ["Currents","Tame Impala","Indie & Alternative","1440875696","290242959","https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/64/48/5c/64485cc9-968c-68cc-764e-9a7c71733def/00602567155454.rgb.jpg/600x600bb.jpg","2015"],
+  ["Innerspeaker","Tame Impala","Indie & Alternative","1439752048","290242959","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e2/45/28/e2452872-ff3d-a53b-847e-72361827d428/00602577163883.rgb.jpg/600x600bb.jpg","2010"],
+  ["Born to Die","Lana Del Rey","Indie & Alternative","1779781213","464296584","https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/59/10/66/591066ea-3c85-3dfe-ef82-ffdbbcdfc8b9/12UMGIM00033.rgb.jpg/600x600bb.jpg","2012"],
+  ["Norman Fucking Rockwell!","Lana Del Rey","Indie & Alternative","1636511913","297623091","https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/8b/86/978b868f-cf69-2930-7fa7-97bd8504de48/5063113143496_cover.jpg/600x600bb.jpg","2019"],
+  ["Elephant","The White Stripes","Indie & Alternative","1675379752","2456318","https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/48/b5/b9/48b5b90e-ba1e-08ff-1217-9e479afdad5d/196589901750.jpg/600x600bb.jpg","2003"],
+  // Jazz expanded
+  ["Kind of Blue","Miles Davis","Jazz","268443092","44984","https://is1-ssl.mzstatic.com/image/thumb/Music/7f/9f/d6/mzi.vtnaewef.jpg/600x600bb.jpg","1959"],
+  ["A Love Supreme","John Coltrane","Jazz","1440713018","120199","https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e5/24/aa/e524aacd-467b-66f3-8931-0fcd6750a4b9/08UMGIM07914.rgb.jpg/600x600bb.jpg","1965"],
+  // Folk & Country expanded
+  ["Rumours","Fleetwood Mac","Folk & Country","594061854","158038","https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4d/13/ba/4d13bac3-d3d5-7581-2c74-034219eadf2b/081227970949.jpg/600x600bb.jpg","1977"],
+  ["Tapestry","Carole King","Folk & Country","747087657","34495","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/68/b6/0e/68b60e89-9d41-e8a1-bba2-05c750f0832b/dj.hwpyamqm.jpg/600x600bb.jpg","1971"],
+  ["The Joshua Tree","U2","Rock","1443155637","78500","https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8f/e2/c3/8fe2c384-f6cb-9af7-371d-2b6a9b204e59/17UMGIM79292.rgb.jpg/600x600bb.jpg","1987"],
+  ["August and Everything After","Counting Crows","Rock","1442449109","35719","https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/3b/dc/90/3bdc90a2-3697-0c5e-3265-65ccaa7dcbb3/14UMGIM00847.rgb.jpg/600x600bb.jpg","1993"],
 ];
 
 const NEW_2026_DATA = [

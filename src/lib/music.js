@@ -37,28 +37,10 @@ export function mapAlbum(x) {
   };
 }
 
-// Search via MusicBrainz — CORS-enabled, no proxy needed, no Apple rate-limit risk.
-// Results carry a Cover Art Archive art URL. album_id is resolved lazily on click via resolveSeed.
 export async function searchAlbums(term) {
-  const q = encodeURIComponent(`(release:"${term}" OR artist:"${term}") AND primarytype:album`);
-  const r = await fetch(
-    `https://musicbrainz.org/ws/2/release-group?query=${q}&fmt=json&limit=25`,
-    { headers: { "User-Agent": "Spindle/1.0 (wesleyfouse17@gmail.com)" } }
-  );
-  if (!r.ok) throw new Error("HTTP " + r.status);
-  const d = await r.json();
+  const d = await fetchJSON(`/api/itunes/search?media=music&entity=album&limit=25&term=${encodeURIComponent(term)}`);
   const seen = new Set();
-  return (d["release-groups"] || [])
-    .filter(rg => rg.id && !seen.has(rg.id) && seen.add(rg.id))
-    .map(rg => ({
-      id: "mb:" + rg.id,
-      mbid: rg.id,
-      title: rg.title,
-      artist: (rg["artist-credit"] || []).map(c => c.name || (c.artist && c.artist.name) || "").join(""),
-      year: (rg["first-release-date"] || "").slice(0, 4),
-      genre: ((rg.genres || [])[0] || {}).name || "",
-      art: `https://coverartarchive.org/release-group/${rg.id}/front-250`,
-    }));
+  return (d.results || []).filter(x => x.collectionName && !seen.has(x.collectionId) && seen.add(x.collectionId)).map(mapAlbum);
 }
 
 // Resolve a {title,artist} seed to a real catalog album (with album_id + art). Cached + throttled.
