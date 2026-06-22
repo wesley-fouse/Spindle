@@ -1,5 +1,3 @@
-// Proxies Apple Music RSS charts — needed because the RSS domain blocks
-// cross-origin browser requests. Cached at the edge for 1 hour.
 export async function onRequestGet(context) {
   const target = "https://rss.applemarketingtools.com/api/v2/us/music/most-played/100/albums.json";
   const cacheKey = new Request(target);

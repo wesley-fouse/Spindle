@@ -8,7 +8,7 @@ import Icon from "./Icon";
 export function Tile({ seed, entryFor, onQuickLog, width = "100%", big = false }) {
   const nav = useNavigate();
   const [album, setAlbum] = useState(seed.album_id ? seed : null);
-  const ref = useInView(async () => { if (!album) { const r = await resolveSeed(seed); setAlbum(r.album_id ? r : { ...seed }); } }, seed.id || seed.album_id);
+  const ref = useInView(() => {}, seed.id || seed.album_id);
   const a = album || seed;
   const entry = a.album_id && entryFor ? entryFor(a.album_id) : null;
   const listened = entry && entry.listened;
