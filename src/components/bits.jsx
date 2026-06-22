@@ -33,7 +33,7 @@ export function Cover({ album, font = 22, innerRef }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [album.art]);
   const initials = (album.title || "").replace(/[^A-Za-z0-9 ]/g, "").split(" ").filter(Boolean).slice(0, 2).map(w => w[0]).join("");
-  return <div ref={innerRef} style={{ position: "relative", width: "100%", aspectRatio: "1 / 1", borderRadius: 4, overflow: "hidden" }}>
+  return <div ref={innerRef} className="cover-art" style={{ position: "relative", width: "100%", aspectRatio: "1 / 1", borderRadius: 4, overflow: "hidden" }}>
     {album.art && !failed
       ? <img src={album.art} onError={() => setFailed(true)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: coverGradient((album.album_id || album.id || "") + album.title) }}>

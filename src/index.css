@@ -32,3 +32,22 @@ button{ font-family:inherit; cursor:pointer; }
   .grid{ grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; }
   .browse{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
 }
+
+/* ---- subtle hover life (desktop pointers only; skipped on touch) ---- */
+.cover-art { transition: transform .22s ease, box-shadow .22s ease; }
+.btn, .btn-primary, .chip, .tab { transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease, border-color .15s ease; }
+.card { transition: transform .18s ease, box-shadow .18s ease; }
+.browse > div { transition: transform .2s ease, box-shadow .2s ease; }
+.sug-row { transition: background-color .12s ease; }
+
+@media (hover: hover) and (pointer: fine) {
+  .cover-art:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 26px rgba(27,26,21,.22); position: relative; z-index: 2; }
+  .browse > div:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(27,26,21,.20); }
+  .btn:hover { transform: translateY(-1px); background: var(--accent-soft); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(42,58,134,.32); }
+  .chip:hover { transform: translateY(-1px); border-color: var(--accent); }
+  .card:hover { box-shadow: 0 8px 22px rgba(27,26,21,.10); }
+  .tab:hover { color: var(--accent); }
+  .sug-row:hover { background: var(--accent-soft); }
+  a:hover .display { text-decoration: none; }
+}

@@ -12,6 +12,7 @@ export default function Profile() {
   const { entries, entryFor, quickLog } = useLibrary();
   const nav = useNavigate();
   const [tab, setTab] = useState("activity");
+  const [actExpanded, setActExpanded] = useState(false);
   const [picker, setPicker] = useState(null);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -68,7 +69,7 @@ export default function Profile() {
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "clamp(8px,2vw,16px)" }}>
       {[0, 1, 2, 3].map(slot => { const id = favs[slot]; const a = id && albumById(id);
         return <div key={slot}>{a
-          ? <div style={{ position: "relative" }}><Link to={`/album/${a.album_id}`} state={{ album: a }}><Cover album={a} font={18} /></Link>
+          ? <div style={{ position: "relative" }}><Link to={`/album/${a.album_id}`}><Cover album={a} font={18} /></Link>
               <button onClick={() => clearFav(slot)} style={{ position: "absolute", top: 5, right: 5, width: 24, height: 24, borderRadius: 999, border: "none", background: "rgba(27,26,21,.6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name="x" size={13} color="#fff" /></button></div>
           : <div onClick={() => setPicker(slot)} style={{ cursor: "pointer", aspectRatio: "1/1", borderRadius: 4, border: "1.5px dashed var(--line)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, color: "var(--muted)", background: "var(--surface)" }}><Icon name="plus" size={20} color="var(--muted)" /><span style={{ fontSize: 11.5 }}>Add</span></div>}</div>; })}
     </div>
@@ -88,13 +89,16 @@ export default function Profile() {
 
     <div style={{ paddingTop: 6 }}>
       {tab === "activity" && (listened.length === 0 ? <Empty icon="cal" title="No activity yet" body="Albums you log show up here as a running diary." />
-        : <div style={{ marginTop: 8 }}>{listened.slice(0, 40).map(a => <Link key={a.album_id} to={`/album/${a.album_id}`} state={{ album: a }} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--line)", textDecoration: "none", color: "var(--ink)" }}>
-            <div style={{ width: 48, flexShrink: 0 }}><Cover album={a} font={13} /></div>
-            <div style={{ flex: 1, minWidth: 0 }}><div className="display" style={{ fontSize: 15, fontWeight: 500 }}>{a.title}</div><div className="muted" style={{ fontSize: 12.5 }}>{a.artist} · {fmtDate(a.listened_on)}</div></div>
-            {a.rating > 0 && <Spins value={a.rating} size={13} />}</Link>)}</div>)}
+        : <div style={{ marginTop: 8 }}>
+            {listened.slice(0, actExpanded ? listened.length : 10).map(a => <Link key={a.album_id} to={`/album/${a.album_id}`} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--line)", textDecoration: "none", color: "var(--ink)" }}>
+              <div style={{ width: 48, flexShrink: 0 }}><Cover album={a} font={13} /></div>
+              <div style={{ flex: 1, minWidth: 0 }}><div className="display" style={{ fontSize: 15, fontWeight: 500 }}>{a.title}</div><div className="muted" style={{ fontSize: 12.5 }}>{a.artist} · {fmtDate(a.listened_on)}</div></div>
+              {a.rating > 0 && <Spins value={a.rating} size={13} />}</Link>)}
+            {listened.length > 10 && <button onClick={() => setActExpanded(v => !v)} style={{ display: "block", margin: "16px auto 0", background: "none", border: "1px solid var(--line)", borderRadius: 999, padding: "8px 20px", color: "var(--accent)", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>{actExpanded ? "Show less" : `See more (${listened.length - 10} more)`}</button>}
+          </div>)}
       {tab === "listened" && (listened.length === 0 ? <Empty icon="cal" title="Nothing logged yet" body="Mark albums as listened from anywhere." /> : <AlbumGrid albums={listened} entryFor={entryFor} showRating />)}
       {tab === "reviews" && (reviews.length === 0 ? <Empty icon="star" title="No reviews yet" body="Add a note to a logged album and it becomes a review." />
-        : <div style={{ marginTop: 8 }}>{reviews.map(a => <div key={a.album_id} style={{ display: "flex", gap: 14, padding: "14px 0", borderBottom: "1px solid var(--line)" }}><Link to={`/album/${a.album_id}`} state={{ album: a }} style={{ width: 64, flexShrink: 0 }}><Cover album={a} font={15} /></Link>
+        : <div style={{ marginTop: 8 }}>{reviews.map(a => <div key={a.album_id} style={{ display: "flex", gap: 14, padding: "14px 0", borderBottom: "1px solid var(--line)" }}><Link to={`/album/${a.album_id}`} style={{ width: 64, flexShrink: 0 }}><Cover album={a} font={15} /></Link>
             <div style={{ flex: 1, minWidth: 0 }}><div className="display" style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.15 }}>{a.title}</div><div className="muted" style={{ fontSize: 12.5, margin: "2px 0 6px" }}>{a.artist}</div>{a.rating > 0 && <div style={{ marginBottom: 6 }}><Spins value={a.rating} size={14} /></div>}<div style={{ fontSize: 14, lineHeight: 1.5 }}>{a.note}</div></div></div>)}</div>)}
       {tab === "list" && (wantList.length === 0 ? <Empty icon="bookmark" title="Your list is empty" body="Tap “Want to listen” on any album." /> : <AlbumGrid albums={wantList} entryFor={entryFor} />)}
       {tab === "likes" && (likeList.length === 0 ? <Empty icon="heart" title="No likes yet" body="Tap the heart on an album." /> : <AlbumGrid albums={likeList} entryFor={entryFor} />)}
