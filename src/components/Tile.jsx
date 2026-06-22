@@ -8,13 +8,13 @@ import Icon from "./Icon";
 export function Tile({ seed, entryFor, onQuickLog, width = "100%", big = false }) {
   const nav = useNavigate();
   const [album, setAlbum] = useState(seed.album_id ? seed : null);
-  const ref = useInView(() => {}, seed.id || seed.album_id);
+  const ref = useInView(async () => { if (!album) { const r = await resolveSeed(seed); setAlbum(r.album_id ? r : { ...seed }); } }, seed.id || seed.album_id);
   const a = album || seed;
   const entry = a.album_id && entryFor ? entryFor(a.album_id) : null;
   const listened = entry && entry.listened;
   const want = entry && entry.want && !entry.listened;
 
-  async function open() { let x = a; if (!x.album_id) x = await resolveSeed(seed); if (x.album_id) nav(`/album/${x.album_id}`, { state: { album: x } }); }
+  async function open() { let x = a; if (!x.album_id) x = await resolveSeed(seed); if (x.album_id) nav(`/album/${x.album_id}`); }
 
   return <div style={{ width }}>
     <div onClick={open} style={{ cursor: "pointer", position: "relative" }}>
