@@ -93,6 +93,20 @@ export async function wikiAbout(query) {
   } catch { return null; }
 }
 
+// Fetch the Apple Music top-albums chart (no rate limits, full artwork + IDs).
+export async function fetchCharts(limit = 100) {
+  const d = await fetchJSON(`https://rss.applemarketingtools.com/api/v2/us/music/most-played/${limit}/albums.json`, 1);
+  return (d.feed?.results || []).map(r => ({
+    album_id: r.id,
+    artist_id: null,
+    title: r.name,
+    artist: r.artistName,
+    art: r.artworkUrl100 ? r.artworkUrl100.replace("100x100bb", "600x600bb") : null,
+    year: r.releaseDate ? r.releaseDate.slice(0, 4) : "",
+    genre: (r.genreNames || [])[0] || "",
+  }));
+}
+
 export const spotifyUrl = (a) => `https://open.spotify.com/search/${encodeURIComponent(a.artist + " " + a.title)}`;
 export const ytUrl = (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
 export const geniusUrl = (q) => `https://genius.com/search?q=${encodeURIComponent(q)}`;
