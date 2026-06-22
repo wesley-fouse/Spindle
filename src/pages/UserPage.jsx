@@ -68,7 +68,7 @@ export default function UserPage() {
     {favs.filter(Boolean).length > 0 && <>
       <h3 className="display" style={{ fontSize: 15, fontWeight: 600, margin: "24px 0 10px", color: "var(--muted)" }}>FAVORITE ALBUMS</h3>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "clamp(8px,2vw,16px)" }}>
-        {favs.slice(0, 4).map((id, i) => { const a = id && byId(id); return <div key={i}>{a ? <Link to={`/album/${a.album_id}`}><Cover album={a} font={18} /></Link> : <div style={{ aspectRatio: "1/1", borderRadius: 4, background: "var(--surface)", border: "1px solid var(--line)" }} />}</div>; })}
+        {favs.slice(0, 4).map((id, i) => { const a = id && byId(id); return <div key={i}>{a ? <Link to={`/album/${a.album_id}`} state={{ album: a }}><Cover album={a} font={18} /></Link> : <div style={{ aspectRatio: "1/1", borderRadius: 4, background: "var(--surface)", border: "1px solid var(--line)" }} />}</div>; })}
       </div>
     </>}
 
@@ -80,7 +80,7 @@ export default function UserPage() {
     {tab === "listened" && (listened.length === 0 ? <Empty icon="cal" title="Nothing logged yet" body={`${name} hasn't logged any albums.`} /> : <AlbumGrid albums={listened} entryFor={entryFor} showRating />)}
     {tab === "reviews" && (reviews.length === 0 ? <Empty icon="star" title="No reviews yet" body={`${name} hasn't written any reviews.`} />
       : reviews.map(a => <div key={a.album_id} style={{ display: "flex", gap: 14, padding: "14px 0", borderBottom: "1px solid var(--line)" }}>
-          <Link to={`/album/${a.album_id}`} style={{ width: 64, flexShrink: 0 }}><Cover album={a} font={15} /></Link>
+          <Link to={`/album/${a.album_id}`} state={{ album: a }} style={{ width: 64, flexShrink: 0 }}><Cover album={a} font={15} /></Link>
           <div style={{ flex: 1, minWidth: 0 }}><div className="display" style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.15 }}>{a.title}</div><div className="muted" style={{ fontSize: 12.5, margin: "2px 0 6px" }}>{a.artist}</div>{a.rating > 0 && <div style={{ marginBottom: 6 }}><Spins value={a.rating} size={14} /></div>}<div style={{ fontSize: 14, lineHeight: 1.5 }}>{a.note}</div></div></div>))}
     {tab === "likes" && (likeList.length === 0 ? <Empty icon="heart" title="No likes yet" body={`${name} hasn't liked any albums.`} /> : <AlbumGrid albums={likeList} entryFor={entryFor} />)}
   </section>;

@@ -14,7 +14,7 @@ export function Tile({ seed, entryFor, onQuickLog, width = "100%", big = false }
   const listened = entry && entry.listened;
   const want = entry && entry.want && !entry.listened;
 
-  async function open() { let x = a; if (!x.album_id) x = await resolveSeed(seed); if (x.album_id) nav(`/album/${x.album_id}`); }
+  async function open() { let x = a; if (!x.album_id) x = await resolveSeed(seed); if (x.album_id) nav(`/album/${x.album_id}`, { state: { album: x } }); }
 
   return <div style={{ width }}>
     <div onClick={open} style={{ cursor: "pointer", position: "relative" }}>

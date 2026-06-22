@@ -21,7 +21,7 @@ export default function Feed() {
         const who = it.profiles?.display_name || it.profiles?.username || "Someone";
         const uname = it.profiles?.username;
         return <div key={it.id} style={{ display: "flex", gap: 14, padding: "14px 0", borderBottom: "1px solid var(--line)" }}>
-          <Link to={`/album/${it.album_id}`} style={{ width: 64, flexShrink: 0 }}><Cover album={it} font={15} /></Link>
+          <Link to={`/album/${it.album_id}`} state={{ album: it }} style={{ width: 64, flexShrink: 0 }}><Cover album={it} font={15} /></Link>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Avatar name={who} size={26} />
@@ -29,7 +29,7 @@ export default function Feed() {
               <span className="muted" style={{ fontSize: 12.5 }}>· {fmtDate(it.listened_on)}</span>
             </div>
             <div className="display" style={{ fontSize: 16, fontWeight: 600, marginTop: 6, lineHeight: 1.15 }}>
-              <Link to={`/album/${it.album_id}`} style={{ textDecoration: "none", color: "var(--ink)" }}>{it.title}</Link>
+              <Link to={`/album/${it.album_id}`} state={{ album: it }} style={{ textDecoration: "none", color: "var(--ink)" }}>{it.title}</Link>
             </div>
             <div className="muted" style={{ fontSize: 12.5 }}>{it.artist}</div>
             {it.rating > 0 && <div style={{ marginTop: 6 }}><Spins value={it.rating} size={13} /></div>}

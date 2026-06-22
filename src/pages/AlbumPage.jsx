@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { getAlbum, wikiAbout, spotifyUrl, ytUrl, geniusUrl } from "../lib/music";
 import { fetchAlbumReviews } from "../lib/db";
 import { useAuth } from "../context/AuthContext";
@@ -10,9 +10,11 @@ import Icon from "../components/Icon";
 export default function AlbumPage() {
   const { id } = useParams();
   const nav = useNavigate();
+  const loc = useLocation();
+  const seeded = loc.state && loc.state.album && String(loc.state.album.album_id) === String(id) ? loc.state.album : null;
   const { user } = useAuth();
   const { entryFor, write, remove } = useLibrary();
-  const [album, setAlbum] = useState(null);
+  const [album, setAlbum] = useState(seeded);
   const [tracks, setTracks] = useState(null);
   const [wiki, setWiki] = useState(undefined);
   const [reviews, setReviews] = useState([]);
@@ -23,13 +25,19 @@ export default function AlbumPage() {
 
   useEffect(() => {
     let dead = false;
-    setAlbum(null); setTracks(null); setWiki(undefined); setReviews([]); setError(false);
+    setTracks(null); setWiki(undefined); setReviews([]); setError(false);
+    if (!seeded) setAlbum(null);
+    const wikiFor = (al) => wikiAbout(al.title + " " + al.artist + " album").then(w => !dead && setWiki(w));
     getAlbum(id).then(({ album, tracks }) => {
       if (dead) return;
-      if (!album) { setError(true); return; }
-      setAlbum(album); setTracks(tracks);
-      wikiAbout(album.title + " " + album.artist + " album").then(w => !dead && setWiki(w));
-    }).catch(() => { if (!dead) setError(true); });
+      if (album) { setAlbum(album); setTracks(tracks); wikiFor(album); }
+      else if (seeded) { setTracks([]); wikiFor(seeded); }   // metadata thin but we can still show the page
+      else setError(true);
+    }).catch(() => {
+      if (dead) return;
+      if (seeded) { setTracks([]); wikiFor(seeded); }        // lookup failed, but we already have the album
+      else setError(true);
+    });
     fetchAlbumReviews(id).then(r => !dead && setReviews(r)).catch(() => {});
     window.scrollTo(0, 0);
     return () => { dead = true; };
