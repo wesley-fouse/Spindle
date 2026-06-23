@@ -40,3 +40,16 @@ export function catSeeds(c) {
   return POOL.filter(a => a.cat === c.key);
 }
 export const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+// Deterministic shuffle: same seed -> same order (used to rotate Featured hourly).
+export function seededShuffle(arr, seed) {
+  let s = seed >>> 0;
+  const rnd = () => { s = (s + 0x6D2B79F5) >>> 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = (rnd() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+// Read the localStorage art/id cache that music.js maintains (artist|title -> {album_id,...}).
+export function loadArtCache() { try { return JSON.parse(localStorage.getItem("spindle_art_v2") || "{}"); } catch { return {}; } }
+export const artKey = (s) => (s.artist + "|" + s.title).toLowerCase();

@@ -31,7 +31,7 @@ export default function Feed() {
             <div className="display" style={{ fontSize: 16, fontWeight: 600, marginTop: 6, lineHeight: 1.15 }}>
               <Link to={`/album/${it.album_id}`} state={{ album: it }} style={{ textDecoration: "none", color: "var(--ink)" }}>{it.title}</Link>
             </div>
-            <div className="muted" style={{ fontSize: 12.5 }}>{it.artist}</div>
+            <div className="muted" style={{ fontSize: 12.5 }}><Link to={`/artist/${encodeURIComponent(it.artist)}?aid=${it.artist_id || ""}`} className="artist-link" style={{ color: "inherit", textDecoration: "none" }}>{it.artist}</Link></div>
             {it.rating > 0 && <div style={{ marginTop: 6 }}><Spins value={it.rating} size={13} /></div>}
             {it.note && <div style={{ fontSize: 14, lineHeight: 1.5, marginTop: 6 }}>{it.note}</div>}
           </div>

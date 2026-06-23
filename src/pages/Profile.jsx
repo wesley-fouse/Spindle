@@ -25,7 +25,10 @@ export default function Profile() {
   useEffect(() => { if (profile) { setName(profile.display_name || ""); setUname(profile.username || ""); } }, [profile]);
 
   const all = Object.values(entries);
-  const listened = useMemo(() => all.filter(a => a.listened).sort((a, b) => (b.listened_on || "").localeCompare(a.listened_on || "")), [entries]);
+  const listened = useMemo(() => all.filter(a => a.listened).sort((a, b) => {
+    const d = (b.listened_on || "").localeCompare(a.listened_on || "");
+    return d !== 0 ? d : (b.updated_at || b.created_at || "").localeCompare(a.updated_at || a.created_at || "");
+  }), [entries]);
   const wantList = all.filter(a => a.want && !a.listened);
   const likeList = all.filter(a => a.liked);
   const reviews = listened.filter(a => a.note && a.note.trim());

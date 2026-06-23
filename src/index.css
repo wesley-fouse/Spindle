@@ -51,3 +51,8 @@ button{ font-family:inherit; cursor:pointer; }
   .sug-row:hover { background: var(--accent-soft); }
   a:hover .display { text-decoration: none; }
 }
+
+.artist-link { cursor: pointer; }
+@media (hover: hover) and (pointer: fine) {
+  .artist-link:hover { color: var(--accent); text-decoration: underline; }
+}
